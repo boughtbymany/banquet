@@ -1,0 +1,7 @@
+__pycache__
+build
+.venv
+.pyc
+.pytest_cache
+.DS_Store
+.vscode
