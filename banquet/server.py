@@ -27,7 +27,11 @@ def run_server(addr, port, routes, spec, functions):
         openapi_spec = build_spec_for_routes(routes)
 
     else:
-        if spec is None or not os.path.exists(spec):
+        if spec is None:
+            logger.error(f"No OpenAPI Spec or Routes provided!")
+            sys.exit(1)
+
+        if not os.path.exists(spec):
             logger.error(f"Unable to find OpenAPI Spec on path '{spec}'")
             sys.exit(1)
 

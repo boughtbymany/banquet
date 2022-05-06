@@ -7,8 +7,6 @@ class BanquetHandler:
         self.handler = None
         self._base = path
         self.path = os.path.join(os.getcwd(), path)
-        self.summary = conf.get("summary")
-        self.gateway = conf.get("x-amazon-apigateway-integration")
         self.handler_path = conf.get("x-handler")
 
         self.load()
@@ -18,11 +16,14 @@ class BanquetHandler:
             return
 
         fp = None
+        source_path = os.path.join(self.path, self.handler_path, "index.py")
+
+        if not os.path.exists(source_path):
+            raise Exception(f"Handler could not be found: '{source_path}'")
 
         try:
             spec = importlib.util.spec_from_file_location(
-                self.handler_path,
-                os.path.join(self.path, self.handler_path, "index.py"),
+                self.handler_path, source_path
             )
             mod = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(mod)
