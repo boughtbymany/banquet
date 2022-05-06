@@ -1,0 +1,50 @@
+name: Test suite
+on: push
+env:
+  POETRY_VERSION: 1.1.13
+jobs:
+  static:
+    name: Static tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Python 3.9
+        id: cache
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+          cache: 'poetry'
+    
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          echo "Installing Poetry"
+          pip install --upgrade pip
+          pip install poetry==${POETRY_VERSION}
+          poetry install -D
+
+      - run: poetry run invoke test-static
+
+  unit:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Python 3.9
+        id: cache
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+          cache: 'poetry'
+    
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          echo "Installing Poetry"
+          pip install --upgrade pip
+          pip install poetry==${POETRY_VERSION}
+          poetry install -D
+
+      - run: poetry run invoke test-unit

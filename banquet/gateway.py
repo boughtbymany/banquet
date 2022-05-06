@@ -19,8 +19,8 @@ class BanquetGateway(BaseHTTPRequestHandler):
         self._set_headers(404)
         self.wfile.write("Not Found.".encode("utf8"))
 
-    def do_GET(self):
-        handler, path_params = self.router.resolve("GET", self.path)
+    def _handle_method(self, method):
+        handler, path_params = self.router.resolve(method, self.path)
 
         if handler is None:
             self._handle_404()
@@ -29,25 +29,12 @@ class BanquetGateway(BaseHTTPRequestHandler):
         self._set_headers()
         response = handler.call({"params": path_params}, {})
         self.wfile.write(str(response).encode("utf8"))
+
+    def do_GET(self):
+        self._handle_method("GET")
 
     def do_POST(self):
-        handler, path_params = self.router.resolve("POST", self.path)
-
-        if handler is None:
-            self._handle_404()
-            return
-
-        self._set_headers()
-        response = handler.call({"params": path_params}, {})
-        self.wfile.write(str(response).encode("utf8"))
+        self._handle_method("POST")
 
     def do_DELETE(self):
-        handler, path_params = self.router.resolve("DELETE", self.path)
-
-        if handler is None:
-            self._handle_404()
-            return
-
-        self._set_headers()
-        response = handler.call({"params": path_params}, {})
-        self.wfile.write(str(response).encode("utf8"))
+        self._handle_method("DELETE")

@@ -22,7 +22,7 @@ class BanquetRouter:
                 for part in URL_PATH_PARAM.findall(url):
                     url = url.replace("{" + part + "}", f"(?P<{part}>.+?)")
 
-                url = re.compile(url)
+                url = re.compile(f"^{url}$")
 
             for method, conf in config.items():
                 method = method.upper()
@@ -41,7 +41,7 @@ class BanquetRouter:
         for route, handler in routes.items():
             if isinstance(route, re.Pattern):
                 if route.match(path):
-                    params = [m.groupdict() for m in route.finditer(path)]
+                    params = [m.groupdict() for m in route.finditer(path)][0]
                     return handler, params
 
         return None, None
