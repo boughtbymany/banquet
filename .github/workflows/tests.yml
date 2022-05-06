@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          poetry install -D
+          poetry install
 
       - run: poetry run invoke test-static
 
@@ -49,6 +49,6 @@ jobs:
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          poetry install -D
+          poetry install
 
       - run: poetry run invoke test-unit
